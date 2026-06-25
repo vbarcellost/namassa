@@ -1,14 +1,15 @@
 package br.com.ebac.app;
 
-import br.com.ebac.dao.ClienteMapDAO;
+import br.com.ebac.dao.ClienteDAO;
 import br.com.ebac.dao.IClienteDAO;
 import br.com.ebac.domain.Cliente;
+import br.com.ebac.exceptions.TipoChaveNaoEncontradaException;
 
 import javax.swing.JOptionPane;
 
 public class App {
 
-    private static final IClienteDAO CLIENTE_DAO = new ClienteMapDAO();
+    private static final IClienteDAO CLIENTE_DAO = new ClienteDAO();
 
     public static void main(String[] args) {
         String opcao = "";
@@ -53,11 +54,15 @@ public class App {
             return;
         }
 
-        Boolean cadastrado = CLIENTE_DAO.cadastrar(cliente);
-        if (cadastrado) {
-            JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso");
-        } else {
-            JOptionPane.showMessageDialog(null, "Cliente ja cadastrado");
+        try {
+            Boolean cadastrado = CLIENTE_DAO.cadastrar(cliente);
+            if (cadastrado) {
+                JOptionPane.showMessageDialog(null, "Cliente cadastrado com sucesso");
+            } else {
+                JOptionPane.showMessageDialog(null, "Cliente ja cadastrado");
+            }
+        } catch (TipoChaveNaoEncontradaException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }
 
@@ -108,8 +113,12 @@ public class App {
             return;
         }
 
-        CLIENTE_DAO.alterar(clienteAlterado);
-        JOptionPane.showMessageDialog(null, "Cliente alterado com sucesso");
+        try {
+            CLIENTE_DAO.alterar(clienteAlterado);
+            JOptionPane.showMessageDialog(null, "Cliente alterado com sucesso");
+        } catch (TipoChaveNaoEncontradaException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
     }
 
     private static Cliente criarClienteAPartirDaTela() {

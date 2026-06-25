@@ -1,14 +1,23 @@
 package br.com.ebac.domain;
 
-public class Cliente {
+import br.com.ebac.anotacao.TipoChave;
+import br.com.ebac.dao.Persistente;
+
+public class Cliente implements Persistente {
 
     private String nome;
+
+    @TipoChave("getCpf")
     private String cpf;
+
     private String telefone;
     private String endereco;
     private String numero;
     private String cidade;
     private String estado;
+
+    public Cliente() {
+    }
 
     public Cliente(String nome, String cpf, String telefone, String endereco, String numero, String cidade, String estado) {
         this.nome = nome;
