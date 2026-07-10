@@ -1,50 +1,59 @@
 package br.com.ebac.app;
 
-import br.com.ebac.dao.ClienteMapDAO;
+import br.com.ebac.dao.ClienteJpaDAO;
 import br.com.ebac.dao.IClienteDAO;
 import br.com.ebac.domain.Cliente;
+import br.com.ebac.jpa.JpaUtil;
 
 import javax.swing.JOptionPane;
 
 public class App {
 
-    private static final IClienteDAO CLIENTE_DAO = new ClienteMapDAO();
+    private static final IClienteDAO CLIENTE_DAO = new ClienteJpaDAO();
 
     public static void main(String[] args) {
         String opcao = "";
 
-        while (!"5".equals(opcao)) {
-            opcao = JOptionPane.showInputDialog(null,
-                    "Digite 1 para cadastrar\n" +
-                            "Digite 2 para consultar\n" +
-                            "Digite 3 para excluir\n" +
-                            "Digite 4 para alterar\n" +
-                            "Digite 5 para sair",
-                    "Cadastro de Cliente",
-                    JOptionPane.INFORMATION_MESSAGE);
+        try {
+            while (!"5".equals(opcao)) {
+                opcao = JOptionPane.showInputDialog(null,
+                        "Digite 1 para cadastrar\n" +
+                                "Digite 2 para consultar\n" +
+                                "Digite 3 para excluir\n" +
+                                "Digite 4 para alterar\n" +
+                                "Digite 5 para sair",
+                        "Cadastro de Cliente",
+                        JOptionPane.INFORMATION_MESSAGE);
 
-            if (opcao == null || "5".equals(opcao)) {
-                sair();
-                break;
-            }
+                if (opcao == null || "5".equals(opcao)) {
+                    sair();
+                    break;
+                }
 
-            switch (opcao) {
-                case "1":
-                    cadastrar();
-                    break;
-                case "2":
-                    consultar();
-                    break;
-                case "3":
-                    excluir();
-                    break;
-                case "4":
-                    alterar();
-                    break;
-                default:
-                    JOptionPane.showMessageDialog(null, "Opcao invalida");
+                switch (opaoNormalizada(opcao)) {
+                    case "1":
+                        cadastrar();
+                        break;
+                    case "2":
+                        consultar();
+                        break;
+                    case "3":
+                        excluir();
+                        break;
+                    case "4":
+                        alterar();
+                        break;
+                    default:
+                        JOptionPane.showMessageDialog(null, "Opcao invalida");
+                }
             }
+        } finally {
+            JpaUtil.fechar();
         }
+    }
+
+    private static String opaoNormalizada(String opcao) {
+        return opcao == null ? "" : opcao.trim();
     }
 
     private static void cadastrar() {
@@ -132,7 +141,7 @@ public class App {
             return null;
         }
 
-        return new Cliente(nome, cpf, telefone, endereco, numero, cidade, estado);
+        return new Cliente(nome, cpf, telefone, endereco, numero, cidade, estado.toUpperCase());
     }
 
     private static String lerCpf() {

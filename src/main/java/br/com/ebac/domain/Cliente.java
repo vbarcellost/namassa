@@ -1,14 +1,38 @@
 package br.com.ebac.domain;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "clientes")
 public class Cliente {
 
+    @Column(nullable = false, length = 120)
     private String nome;
+
+    @Id
+    @Column(nullable = false, unique = true, length = 20)
     private String cpf;
+
+    @Column(nullable = false, length = 20)
     private String telefone;
+
+    @Column(nullable = false, length = 150)
     private String endereco;
+
+    @Column(nullable = false, length = 10)
     private String numero;
+
+    @Column(nullable = false, length = 80)
     private String cidade;
+
+    @Column(nullable = false, length = 2)
     private String estado;
+
+    public Cliente() {
+    }
 
     public Cliente(String nome, String cpf, String telefone, String endereco, String numero, String cidade, String estado) {
         this.nome = nome;
